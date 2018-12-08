@@ -7,11 +7,53 @@ import java.util.Vector;
 import java.util.Collections;
 import java.lang.*;
 //import java.util.List;
-
+class Voxe {
+	Vertex vertex;
+	ArrayList<Edge> edges;
+	public Voxe (Vertex vertex){
+		this.vertex = vertex;
+		this.edges = new ArrayList<Edge>();
+	}
+}
 public class Graph {
 	
-	 AdjacencyList graph = new AdjacencyList();
-	 
+	ArrayList<Voxe>graph = new ArrayList<Voxe>();
+	AdjacencyList graph1 = new AdjacencyList();
+	ArrayList<Edge>allEdges = new ArrayList<Edge>();
+	public boolean edgeExists(String strEdgeUniqueID){
+		for(int i=0; i<this.allEdges.size(); i++){
+			if(this.allEdges.get(i).getUniqueID().equals(strEdgeUniqueID)){
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean vertexExists(String strVertexUniqueID){
+		for(int i=0; i<this.graph.size(); i++){
+			if(this.graph.get(i).vertex.getUniqueID().equals(strVertexUniqueID)){
+				return true;
+			}
+		}
+		return false;
+	}
+	public void removeEasyEdge(String strEdgeUniqueID){
+		for(int i=0; i<this.allEdges.size(); i++){
+			if(this.allEdges.get(i).getUniqueID().equals(strEdgeUniqueID)){
+				this.allEdges.remove(i);
+				return;
+			}
+		}
+		System.out.println("edge "+strEdgeUniqueID+" wasn't found(removeEasyEdge)");
+	}
+	public void removeEasyVertex(String strVertexUniqueID){
+		for(int i=0; i<this.graph.size();i++){
+			if(this.graph.get(i).vertex.getUniqueID().equals(strVertexUniqueID)){
+				this.graph.remove(i);
+				return;
+			}
+		}
+		System.out.println("vertex "+strVertexUniqueID+" wasn't found(removeEasyVertex)");
+	}
 	// returns the name you have given to this graph library [1 pt]
 	 // choose whatever name you like!
 	public String getLibraryName( ){
@@ -26,66 +68,26 @@ public class Graph {
 
 	 // the following method adds a vertex to the graph [2 pts]
 	public void insertVertex(String strUniqueID,String strData,int nX, int nY ) throws GraphException{
+		if(vertexExists(strUniqueID)) throw new GraphException("Vertex with id "+strUniqueID+" already exists!");
 		Vertex v= new Vertex(strUniqueID,strData,nX,nY);
-		B joey=new B(v);
-		if(graph.head == null){
-			graph.head=joey;
-		}
-		else{
-			//search
-			boolean flagil = false;
-			B ziad=graph.head;
-			while(true){
-				if(ziad.vertex.getUniqueID().equals(strUniqueID)){
-					flagil = true;
-					break;
-				}
-				if(ziad.next==null)
-					break;
-				ziad=ziad.next;
-			}
-			//search donee
-			if(flagil){
-				GraphException hisham = new GraphException("vertex already existsssssss!");
-				throw hisham;
-			}
-			else{
-				ziad=graph.head;
-				while(true){
-					if(ziad.next==null)
-						break;
-					ziad=ziad.next;
-				}
-				ziad.next=joey;
-			}
-		}
+		Voxe joey=new Voxe(v);
+		this.graph.add(joey);
 	}
 	// inserts an edge between 2 specified vertices [2 pts]
 	public void insertEdge(String strVertex1UniqueID,String strVertex2UniqueID,String strEdgeUniqueID,String strEdgeData,int nEdgeCost) throws GraphException{
-		
+		if(edgeExists(strEdgeUniqueID)) throw new GraphException("Edge with id "+strEdgeUniqueID+" already exists!");
 		boolean flagil1 = false;
-		boolean flagil2= false;
-		
-		B ziad=graph.head;
-		if(graph.head == null){
-			throw new GraphException("Must insert verticies before you insert edges");
-		}
-		// System.out.println("CHECKING BOTH VERTICIES EXIST");
-		while(true){
-			if(ziad.vertex.getUniqueID().equals(strVertex1UniqueID)){
+		boolean flagil2 = false;
+		int vertex1Pos = 0, vertex2Pos = 0;
+		for(int i=0; i<this.graph.size();i++){
+			if(this.graph.get(i).vertex.getUniqueID().equals(strVertex1UniqueID)){
 				flagil1 = true;
-				// System.out.println("vertex exists::::"+strVertex1UniqueID);
+				vertex1Pos = i;
 			}
-			if(ziad.vertex.getUniqueID().equals(strVertex2UniqueID)){
+			else if(this.graph.get(i).vertex.getUniqueID().equals(strVertex2UniqueID)){
 				flagil2 = true;
-				// System.out.println("vertex exists::::"+strVertex2UniqueID);
+				vertex2Pos = i;
 			}
-			if(flagil1&&flagil2)
-				break;
-			if(ziad.next==null)
-				break;
-			ziad=ziad.next;
-			// System.out.println(".");
 		}
 		if(!flagil1 || !flagil2){
 			GraphException hisham = new GraphException("One of the vertices is missssssiiiiiiinnnnnggggg");
@@ -93,317 +95,120 @@ public class Graph {
 		}
 		else{
 			Edge e = new Edge(strEdgeUniqueID, strEdgeData, nEdgeCost,strVertex2UniqueID,strVertex1UniqueID);
-			flagil1= false;
-			flagil2= false;
-			A a =null;
-			//A aa =null;
-			A joey= new A(e);
-			ziad = graph.head;
-			// System.out.println("Gonna insert");
-			while(true){
-				if(ziad.vertex.getUniqueID().equals(strVertex1UniqueID)){
-					a = ziad.a;
-					if(a != null){
-						while(a.next!=null){
-							a=a.next;
-							System.out.println(".");
-						}
-						a.next= joey;
-					}
-					else{
-						ziad.a = joey;
-					}
-					flagil1= true;
-					// System.out.println("insert in vertex 1");
-				}
-				if(ziad.vertex.getUniqueID().equals(strVertex2UniqueID)){
-					a = ziad.a;
-					if(a != null){
-						while(a.next!=null){
-							System.out.println(".");
-							a=a.next;
-						}
-						a.next= joey;
-					}
-					else{
-						ziad.a = joey;
-					}
-					flagil2= true;
-					// System.out.println("insert in vertex 2");
-				}
-				if(flagil1&&flagil2)
-					break;
-				
-				ziad=ziad.next;
-				// System.out.println(".");
-			}
+			this.graph.get(vertex1Pos).edges.add(e);
+			this.graph.get(vertex2Pos).edges.add(e);
+			this.allEdges.add(e);
 		}
-		
 	}
-
 	// removes vertex and its incident edges [1 pt]
 	public void removeVertex(String strVertexUniqueID) throws GraphException{
-
-		boolean flagil = false;
-		B ziad=graph.head;
-		if(graph.head == null){
-			throw new GraphException("Must initialize graph before you remove Vertex");
-		}
-		if(ziad.vertex.getUniqueID().equals(strVertexUniqueID)){
-			flagil = true;
-			graph.head = ziad.next;
-		}
-		B prev = graph.head;
-		if(graph.head != null){
-			ziad = graph.head.next;
-		}
-		else{
-			return;
-		}
-		while(true){
-			if(flagil)
-				break;
-			if(ziad.vertex.getUniqueID().equals(strVertexUniqueID)){
-				flagil = true;
-				prev.next = ziad.next;
-				break;
-			}
-			if(ziad.next==null)
-				break;
-			prev= ziad;
-			ziad=ziad.next;
-		}
-		if(!flagil){
-			GraphException hisham = new GraphException("the vertex is missssssiiiiiiinnnnnggggg");
-			throw hisham;
-		}
-		if(flagil){
-			ziad=graph.head;
-			while(true){
-				A oshet= ziad.a;
-				if(oshet != null){
-					while(oshet.next!=null){
-						if((oshet.edge.lvid.equals(strVertexUniqueID))||((oshet.edge.rvid.equals(strVertexUniqueID)))){
-							removeEdge(oshet.edge.getUniqueID());
-						}
-						oshet=oshet.next;
-					}
+		if(!vertexExists(strVertexUniqueID)) throw new GraphException("Vertex "+strVertexUniqueID+" Does not exist!");
+		removeEasyVertex(strVertexUniqueID);
+		for(int i=0; i<this.graph.size(); i++){
+			for(int j=0; j<this.graph.get(i).edges.size(); j++){
+				if((this.graph.get(i).edges.get(j).lvid.equals(strVertexUniqueID)) || 
+					(this.graph.get(i).edges.get(j).rvid.equals(strVertexUniqueID))){
+					
+					String edgeid = this.graph.get(i).edges.get(j).getUniqueID();
+					removeEasyEdge(edgeid);
+					this.graph.get(i).edges.remove(j);
 				}
-				if(ziad.next==null){
-					break;
-				}
-				ziad=ziad.next;
 			}
 		}
 	}
-
 	// removes an edge from the graph [1 pt]
 	public void removeEdge(String strEdgeUniqueID) throws GraphException{
-		if(graph.head == null){
-			throw new GraphException("Must initialize graph before you remove Edges");
-		}
-		B ziad=graph.head;
-		A ziada=ziad.a;
-		A perv=ziada;
-		boolean flagil1 = false;
-		boolean flagil2 = false;
-		boolean flagil3 = false;
-		while(true){
-			ziada=ziad.a;
-			if(ziada != null){
-				if(ziada.edge.getUniqueID().equals(strEdgeUniqueID)){
-					ziad.a=ziada.next;
-					if(flagil1){
-						if(flagil2){
-							if(flagil3){
-								return;
-							}
-							else{
-								flagil3 = true;
-							}
-						}
-						else{
-							flagil2 = true;
-						}
-					}
-					else{
-						flagil1 = true;
-					}
-				}	
-				perv=ziada;
-				while(ziada.next!=null){
-					if(ziada.edge.getUniqueID().equals(strEdgeUniqueID)){
-						perv.next=ziada.next;
-						if(flagil1){
-							if(flagil2){
-								if(flagil3){
-									return;
-								}
-								else{
-									flagil3 = true;
-								}
-							}
-							else{
-								flagil2 = true;
-							}
-						}
-						else{
-							flagil1 = true;
-						}
-					}
-					perv = ziada;
-					ziada=ziada.next;
+		if(!edgeExists(strEdgeUniqueID)) throw new GraphException("Edge "+strEdgeUniqueID+" Does not exist!");
+		removeEasyEdge(strEdgeUniqueID);
+		int q = 0;
+		for(int i=0; i<this.graph.size(); i++){
+			for(int j=0; j<this.graph.get(i).edges.size(); j++){
+				if(q>=2){break;}
+				if(this.graph.get(i).edges.get(j).getUniqueID().equals(strEdgeUniqueID)){
+					this.graph.get(i).edges.remove(j);
+					q++;
 				}
 			}
-			if(ziad.next==null){
-				break;
-			}
-			ziad=ziad.next;
 		}
 	}
-
 	// returns a vector of edges incident to vertex whose
 	 // id is strVertexUniqueID [1 pt]
 	public Vector<Edge> incidentEdges(String strVertexUniqueID) throws GraphException{
+		if(!vertexExists(strVertexUniqueID)) throw new GraphException("Vertex "+strVertexUniqueID+" Does not exist!");
 		Vector<Edge> v = new Vector<Edge>();
-		if(graph.head == null){
-			throw new GraphException("Must initialize graph before you try to perform this kind of operation");
-		}
-		B ziad=graph.head;
-		A ziada=ziad.a;
-
-		while(true){
-			if(ziad.vertex.getUniqueID().equals(strVertexUniqueID)){
-				ziada=ziad.a;
-				System.out.println("vertex exists::::"+strVertexUniqueID);
-				int k =0;
-				while((ziada != null)&(k<10)){
-					v.add(ziada.edge);
-					ziada = ziada.next;
-					k++;
+		for(int i=0; i<this.graph.size(); i++){
+			if(this.graph.get(i).vertex.getUniqueID().equals(strVertexUniqueID)){
+				for(int j=0; j<this.graph.get(i).edges.size(); j++){
+					v.add(this.graph.get(i).edges.get(j));
 				}
-			}
-			if(ziad.next==null){
 				break;
 			}
-			// System.out.println(".");
-			ziad=ziad.next;
 		}
 		return v;
 	}
-
-	 
-
 	 // returns all vertices in the graph [1 pt]
 	public Vector<Vertex> vertices()throws GraphException{
 		Vector<Vertex> v = new Vector<Vertex>();
-		B ziad=graph.head;
-		while(ziad.next!=null){
-			v.add(ziad.vertex);
-			ziad=ziad.next;
+		for(int i=0; i<this.graph.size(); i++){
+			v.add(this.graph.get(i).vertex);
 		}
 		return v;
 	}
-
 	// returns all edges in the graph [1 pt]
 	public Vector<Edge> edges() throws GraphException{
 		Vector<Edge> v = new Vector<Edge>();
-		B ziad=graph.head;
-		A ziada=ziad.a;
-		
-
-		while(true){
-			ziada=ziad.a;
-			while(ziada.next!=null){
-				v.add(ziada.edge);
-				ziada=ziada.next;
-			}
-			if(ziad.next==null){
-				break;
-			}
-			ziad=ziad.next;
+		for(int i=0; i<this.allEdges.size(); i++){
+			v.add(this.allEdges.get(i));
 		}
 		return v;
 	}
-
 	// returns an array of the two end vertices of the
 	 // passed edge [1 pt]
 	public Vertex[] endVertices(String strEdgeUniqueID)throws GraphException{
+		if(!edgeExists(strEdgeUniqueID)) throw new GraphException("Edge "+strEdgeUniqueID+" Does not exist!");
 		Vertex[]v =new Vertex[2];
-		boolean flagil1 = false;
-		boolean flagil2 = false;
-		B ziad=graph.head;
-		A ziada=ziad.a;
-		A perv=ziada;
-		String ID1="";
-		String ID2="";
-		while(true){
-			ziada=ziad.a;
-			
-			while(ziada.next!=null){
-				if((ziada.edge.getUniqueID().equals(strEdgeUniqueID))){
-					ID1=(ziada.edge.lvid);
-					ID2=(ziada.edge.rvid);
-					break;
-				
-				}
-				ziada=ziada.next;
-			}
-			if(ziad.next==null){
+		String id1 = "";
+		String id2 = "";
+		for(int i=0; i<this.allEdges.size(); i++){
+			if(this.allEdges.get(i).getUniqueID().equals(strEdgeUniqueID)){
+				id1 = this.allEdges.get(i).lvid;
+				id2 = this.allEdges.get(i).rvid;
 				break;
 			}
-			ziad=ziad.next;
 		}
-		 ziad=graph.head;
-		while(true){
-			if(ziad.vertex.getUniqueID().equals(ID1)){
-				v[0]= ziad.vertex;
-				flagil1=true;
+		int count = 0;
+		for(int i=0; i<this.graph.size(); i++){
+			if(count>=2){break;}
+			if(this.graph.get(i).vertex.getUniqueID().equals(id1)){
+				v[0] = this.graph.get(i).vertex;
+				count++;
 			}
-			if(ziad.vertex.getUniqueID().equals(ID2)){
-				v[1]= ziad.vertex;
-				flagil2=true;
+			if(this.graph.get(i).vertex.getUniqueID().equals(id2)){
+				v[1] = this.graph.get(i).vertex;
+				count++;
 			}
-			if(flagil1&&flagil2)
-				break;
-			if(ziad.next==null)
-				break;
-			ziad=ziad.next;
 		}
 		return v;
 	}
 	// returns the vertex opposite of another vertex [1 pt]
 	public Vertex opposite(String strVertexUniqueID,String strEdgeUniqueID) throws GraphException{
-		boolean flagil = false;
-		B ziad=graph.head;
-		A ziada=ziad.a;
-		String savar="";
-		while(true){
-			ziada=ziad.a;
-			while(ziada.next!=null){
-				if(ziada.edge.getUniqueID().equals(strEdgeUniqueID)){
-					if(ziada.edge.lvid.equals(strVertexUniqueID)){
-						savar = ziada.edge.rvid;
-					}else{
-						savar = ziada.edge.lvid;
-					}
-					break;
+		if(!edgeExists(strEdgeUniqueID)) throw new GraphException("Edge "+strEdgeUniqueID+" Does not exist!");
+		String id1 = "";
+		for(int i=0; i<this.allEdges.size(); i++){
+			if(this.allEdges.get(i).getUniqueID().equals(strEdgeUniqueID)){
+				if(this.allEdges.get(i).lvid.equals(strVertexUniqueID)){
+					id1 = this.allEdges.get(i).rvid;
 				}
-				ziada=ziada.next;
-			}
-			if(ziad.next==null){
+				else{
+					id1 = this.allEdges.get(i).lvid;
+				}
 				break;
 			}
-			ziad=ziad.next;
 		}
-		ziad=graph.head;
-		while(true){
-			if(ziad.vertex.getUniqueID().equals(savar)){
-				return ziad.vertex;
+		for(int i=0; i<this.graph.size(); i++){
+			if(this.graph.get(i).vertex.getUniqueID().equals(id1)){
+				return this.graph.get(i).vertex;
 			}
-			if(ziad.next==null)
-				break;
-			ziad=ziad.next;
 		}
 		return null;
 	}
@@ -412,112 +217,100 @@ public class Graph {
 //	// visitor is called on each vertex and edge visited. [12 pts]
 	public void dfs(String strStartVertexUniqueID, Visitor visitor) throws GraphException{ 
 		//boolean flagil = false;
-		B ziad=searchB(strStartVertexUniqueID);
-		//ziad.vertex.label="visited";
-		//visitor.visit(ziad.vertex);
-		Stack <B> s=  new Stack<B>();
-		B floor = new B(new Vertex("hahahahahahahahahahahahahahahahahahahahahahahahafgn;ajfehu","khfa",0,0));
-		s.push(floor);
-		A mark = ziad.a;
-		while(!(s.peek().vertex.getUniqueID().equals("hahahahahahahahahahahahahahahahahahahahahahahahafgn;ajfehu"))){
-			//
-			mark = ziad.a;
-			if(!ziad.vertex.label.equals("visited")){
-				ziad.vertex.label="visited";
-				visitor.visit(ziad.vertex);
-				s.push(ziad);
-			} 
-			while(true){
-				if(mark.edge.label.equals("undiscovered")){
-					visitor.visit(mark.edge);
-					if(mark.edge.rvid.equals(ziad.vertex.getUniqueID())){
-						ziad=searchB(ziad.a.edge.lvid);
+		if(!vertexExists(strStartVertexUniqueID)) throw new GraphException("Vertex "+strStartVertexUniqueID+" Does not exist!");
+		for(int i=0; i<this.graph.size(); i++){
+			this.graph.get(i).vertex.label = "UNEXPLORED";
+		}
+		for(int i=0; i<this.allEdges.size(); i++){
+			this.allEdges.get(i).label = "UNEXPLORED";
+		}
+		Voxe voxe = this.graph.get(searchB(strStartVertexUniqueID));
+		Stack <Voxe> stack=  new Stack<Voxe>();
+		stack.push(voxe);
+		voxe.vertex.label="VISITED";
+		visitor.visit(voxe.vertex);
+		while(!stack.isEmpty()){
+			ArrayList<Edge> edges = stack.peek().edges;
+			for(int i=0; i<edges.size(); i++){
+				if(edges.get(i).label.equals("UNEXPLORED")){
+					
+					if(edges.get(i).lvid.equals(stack.peek().vertex.getUniqueID())){
+						voxe = this.graph.get(searchB(edges.get(i).rvid));
 					}
 					else{
-						ziad=searchB(ziad.a.edge.rvid);
+						voxe = this.graph.get(searchB(edges.get(i).lvid));
 					}
-					if(ziad.vertex.label.equals("undiscovered"))
+					// other explored or not
+					if(voxe.vertex.label.equals("UNEXPLORED")){
+						visitor.visit(edges.get(i));
+						edges.get(i).label = "DISCOVERY";
+						voxe.vertex.label = "VISITED";
+						Visitor.visit(voxe.vertex);
+						stack.push(voxe);
 						break;
-				}
-				mark=mark.next;
-				if(mark==null){
-					s.pop();
-					ziad=s.peek();
-					break;
+					}
+					else{
+						edges.get(i).label = "BACK";
+					}
 				}
 			}
-			
-			
-			//
+			stack.pop();
 		}
-		
-		
 	}
-	public B searchB(String UID){
-		boolean flagil = false;
-		B ziad=graph.head;
-		while(true){
-			if(ziad.vertex.getUniqueID().equals(UID)){
-				flagil = true;
+	public int searchB(String UID){
+		int i;
+		for(i=0; i<this.graph.size(); i++){
+			if(this.graph.get(i).vertex.getUniqueID().equals(UID)){
 				break;
 			}
-			if(ziad.next==null)
-				break;
-			ziad=ziad.next;
 		}
-		if(flagil)
-			return ziad;
-		else 
-			return null;
-	}
-		
+		return i;  
+	}	
 //
 //
 //	 // performs breadth first search starting from passed vertex
 //	 // visitor is called on each vertex and edge visited. [17 pts]
 	 public void bfs(String strStartVertexUniqueID,
 	 Visitor visitor) throws GraphException{
-		//boolean flagil = false;
-			B ziad=searchB(strStartVertexUniqueID);
-			ziad.vertex.label="visited";
-			visitor.visit(ziad.vertex);
-			Queue <B> q=  new LinkedList<>();
-			q.add(ziad);
-			A mark = ziad.a;
-			while(!q.isEmpty()){
-				//
-				ziad = q.remove();
-				mark = ziad.a;
-//				if(!ziad.vertex.label.equals("visited")){
-//					ziad.vertex.label="visited";
-//					visitor.visit(ziad.vertex);
-//					q.add(ziad);
-//				} 
-				while(true){
-					if(mark.edge.label.equals("undiscovered")){
-						visitor.visit(mark.edge);
-						if(mark.edge.rvid.equals(ziad.vertex.getUniqueID())){
-							ziad=searchB(ziad.a.edge.lvid);
-						}
-						else{
-							ziad=searchB(ziad.a.edge.rvid);
-						}
-						if(ziad.vertex.label.equals("undiscovered"))
-							ziad.vertex.label="visited";
-							visitor.visit(ziad.vertex);
-							q.add(ziad);
+
+		if(!vertexExists(strStartVertexUniqueID)) throw new GraphException("Vertex "+strStartVertexUniqueID+" Does not exist!");
+		for(int i=0; i<this.graph.size(); i++){
+			this.graph.get(i).vertex.label = "UNEXPLORED";
+		}
+		for(int i=0; i<this.allEdges.size(); i++){
+			this.allEdges.get(i).label = "UNEXPLORED";
+		}
+		Queue<Voxe> queue = new Queue<Voxe>();
+		Voxe voxe = this.graph.get(searchB(strStartVertexUniqueID));
+		queue.add(voxe);
+		voxe.vertex.label = "VISITED";
+		visitor.visit(voxe.vertex);
+		Voxe voxe2;
+		while(!queue.isEmpty()){
+			ArrayList<Edge> edges = queue.remove().edges;
+			for(int i=0; i<edges.size(); i++){
+				if(edges.get(i).label.equals("UNEXPLORED")){
+					
+					if(edges.get(i).lvid.equals(queue.peek().vertex.getUniqueID())){
+						voxe2 = this.graph.get(searchB(edges.get(i).rvid));
 					}
-					mark=mark.next;
-					if(mark==null){
-//						q.remove();
-//						ziad=q.peek();
-						break;
+					else{
+						voxe2 = this.graph.get(searchB(edges.get(i).lvid));
+					}
+					// other explored or not
+					if(vox2.vertex.label.equals("UNEXPLORED")){
+						visitor.visit(edges.get(i));
+						edges.get(i).label = "DISCOVERY";
+						voxe2.vertex.label = "VISITED";
+						Visitor.visit(voxe2.vertex);
+						queue.add(voxe2);
+					}
+					else{
+						edges.get(i).label = "CROSS";
 					}
 				}
-//				
-				
-				//
 			}
+		}
 	 }
 //	// returns a path between start vertex and end vertex
 //	// if exists using dfs. [18 pts]
@@ -603,9 +396,9 @@ public class Graph {
 //	// finds the closest pair of vertices using divide and conquer
 //	// algorithm. Use X and Y attributes in each vertex. [30 pts]
 	public Vertex[] closestPair() throws GraphException {
-		if(this.graph.head==null || this.graph.head.next==null)
+		if(this.graph1.head==null || this.graph1.head.next==null)
 			throw new GraphException("Must initialize graph with atleast 2 verticies first");
-		B bContainingVertex = this.graph.head;
+		B bContainingVertex = this.graph1.head;
 		Stack<B> tempBStack = new Stack<B>();
 		while(bContainingVertex!=null){
 			tempBStack.push(bContainingVertex);
@@ -802,7 +595,7 @@ public class Graph {
 
 	}
 	public void prinG(){
-		B ml = graph.head;
+		B ml = graph1.head;
 		while(ml != null){
 			System.out.println("\nVertex: "+ml);
 			A dw = ml.a;
@@ -812,7 +605,7 @@ public class Graph {
 			}
 			ml = ml.next;
 		}
-		if(graph.head == null){
+		if(graph1.head == null){
 			System.out.println("nothing yet :)");
 		}
 	}
