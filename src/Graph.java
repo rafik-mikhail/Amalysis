@@ -234,6 +234,7 @@ public class Graph {
 		Voxe voxe = this.graph.get(searchB(strStartVertexUniqueID));
 		Stack <Voxe> stack=  new Stack<Voxe>();
 		stack.push(voxe);
+		boolean flagil = true;
 		voxe.vertex.label="VISITED";
 		visitor.visit(voxe.vertex);
 		while(!stack.isEmpty()){
@@ -254,6 +255,7 @@ public class Graph {
 						voxe.vertex.label = "VISITED";
 						visitor.visit(voxe.vertex);
 						stack.push(voxe);
+						flagil = false;
 						break;
 					}
 					else{
@@ -261,7 +263,10 @@ public class Graph {
 					}
 				}
 			}
-			stack.pop();
+			if(flagil){
+				stack.pop();
+			}
+			flagil = true;
 		}
 	}
 	public int searchB(String UID){
@@ -294,11 +299,12 @@ public class Graph {
 		visitor.visit(voxe.vertex);
 		Voxe voxe2;
 		while(!queue.isEmpty()){
-			ArrayList<Edge> edges = queue.remove().edges;
+			voxe = queue.remove();
+			ArrayList<Edge> edges = voxe.edges;
 			for(int i=0; i<edges.size(); i++){
 				if(edges.get(i).label.equals("UNEXPLORED")){
 					
-					if(edges.get(i).lvid.equals(queue.peek().vertex.getUniqueID())){
+					if(edges.get(i).lvid.equals(voxe.vertex.getUniqueID())){
 						voxe2 = this.graph.get(searchB(edges.get(i).rvid));
 					}
 					else{
@@ -336,7 +342,7 @@ public class Graph {
 		boolean flagil = true;
 		stack.push(voxe);
 		voxe.vertex.label="VISITED";
-		while(!(stack.peek().vertex.getUniqueID().equals("strEndVertexUniqueID"))){
+		while(!(stack.peek().vertex.getUniqueID().equals(strEndVertexUniqueID))){
 			ArrayList<Edge> edges = stack.peek().edges;
 			for(int i=0; i<edges.size(); i++){
 				if(edges.get(i).label.equals("UNEXPLORED")){
@@ -362,8 +368,10 @@ public class Graph {
 				}
 			}
 			if(flagil){
+				if(stack.size()>1){
+					edgeStack.pop();
+				}
 				stack.pop();
-				edgeStack.pop();
 				if(stack.isEmpty()){
 					throw new GraphException("NO PATH EXISTS!");
 				}
@@ -553,25 +561,55 @@ public class Graph {
 		// g.prinG();
 		g.insertVertex("s","d",0,4);
 		// g.prinG();
-		g.insertVertex("s1","d1",1,4);
+		g.insertVertex("s1","d1",100,4);
 		// g.prinG();
 		g.insertVertex("s2","d2",5,4);
+		g.insertVertex("s3", "d3", 7, 4);
+		g.insertVertex("s4", "d4", 8, 3);
 		// g.prinG();
-		g.insertEdge("s", "s1", "e", "ed", 1);
+		g.insertEdge("s", "s1", "e1", "ed", 1);
 		g.insertEdge("s", "s2", "e2", "ed1", 1);
-		g.insertEdge("s1", "s2", "e12", "ed2", 1);
+		g.insertEdge("s", "s3", "e3", "ed2", 1);
+		g.insertEdge("s1", "s2", "e12", "ed3", 1);
+		g.insertEdge("s1", "s3", "e13", "ed4", 1);
+		g.insertEdge("s2", "s3", "e23", "ed5", 1);
+		
 		// System.out.println("hi joey");
-		//g.prinG();
-		// g.removeVertex("s2");
 		// g.prinG();
-		// g.removeEdge("e");
+		// System.out.println(g.vertexExists("s2"));
+		//g.removeVertex("s2");
+		// System.out.println(g.vertexExists("s2"));
 		// g.prinG();
-		System.out.println("\n\n\n\n\n\n\n");
-		Vector<Edge> incEdges = g.incidentEdges("s");
-		System.out.println("incident for s");
-		for(int i = 0; i<incEdges.size();i++){
-			System.out.println(incEdges.get(i).getUniqueID());
-		}
+		// System.out.println(g.edgeExists("e13"));
+		//g.removeEdge("e13");
+		// System.out.println(g.endVertices("e1")[0].getUniqueID());
+		// System.out.println(g.endVertices("e1")[1].getUniqueID());
+		// System.out.println(g.opposite("s3","e3").getUniqueID());
+		// g.prinG();
+		// System.out.println("\n");
+		// Visitor visitor = new Visitor();
+		// g.dfs("s",visitor);
+		// System.out.println(g.edgeExists("e13"));
+		// System.out.println(g.getLibraryName());
+		// System.out.println(g.getLibraryVersion());
+		// g.prinG();
+		//System.out.println("\n\n\n\n\n\n\n");
+		// Vector<Edge> incEdges = g.incidentEdges("s");
+		// System.out.println("incident for s");
+		// for(int i = 0; i<incEdges.size();i++){
+			// System.out.println(incEdges.get(i).getUniqueID());
+		// }
+		// Vector<PathSegment> incEdges = g.pathDFS("s","s3");
+		// System.out.println("path:");
+		// for(int i = 0; i<incEdges.size();i++){
+		// 	System.out.println(incEdges.get(i).getVertex().getUniqueID());
+		// 	System.out.println(incEdges.get(i).getEdge().getUniqueID());
+		// }
+		// Vector<Vertex> incEdges = g.vertices();
+		// System.out.println("vertices:");
+		// for(int i = 0; i<incEdges.size();i++){
+		// 	System.out.println(incEdges.get(i).getUniqueID());
+		// }
 		// System.out.println("incident for s1");
 		// incEdges = g.incidentEdges("s1");
 		// for(int i = 0; i<incEdges.size();i++){
@@ -582,8 +620,8 @@ public class Graph {
 		// for(int i = 0; i<incEdges.size();i++){
 		// 	System.out.println(incEdges.get(i).getUniqueID());
 		// }
-		// Vertex[] closestPai = g.closestPair();
-		// System.out.println("X1: "+closestPai[0].getX()+" Y1: "+closestPai[0].getY()+" X2: "+closestPai[1].getX()+ " Y2: "+closestPai[1].getY()+'.');
+		Vertex[] closestPai = g.closestPair();
+		System.out.println("p1: "+closestPai[0].getUniqueID()+" p2: "+closestPai[1].getUniqueID()+'.');
 		// boolean f5 = false;
 		// System.out.println(60);
 
@@ -592,5 +630,13 @@ public class Graph {
 		for(int i=0; i<this.graph.size(); i++){
 			System.out.println(this.graph.get(i));
 		}
+	}
+}
+class Visitor{
+	public void visit(Vertex vertex){
+		System.out.println(vertex.getUniqueID());
+	}
+	public void visit(Edge edge){
+		System.out.println(edge.getUniqueID());
 	}
 }
