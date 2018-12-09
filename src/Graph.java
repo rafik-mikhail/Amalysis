@@ -14,6 +14,14 @@ class Voxe {
 		this.vertex = vertex;
 		this.edges = new ArrayList<Edge>();
 	}
+	public String toString(){
+		String toBeReturned = "Vertex: ";
+		toBeReturned += this.vertex.getUniqueID()+" Edges:\n";
+		for(int i=0; i<this.edges.size(); i++){
+			toBeReturned += this.edges.get(i).getUniqueID()+" ";
+		}
+		return toBeReturned;
+	}
 }
 public class Graph {
 	
@@ -216,7 +224,6 @@ public class Graph {
 //	// performs depth first search starting from passed vertex
 //	// visitor is called on each vertex and edge visited. [12 pts]
 	public void dfs(String strStartVertexUniqueID, Visitor visitor) throws GraphException{ 
-		//boolean flagil = false;
 		if(!vertexExists(strStartVertexUniqueID)) throw new GraphException("Vertex "+strStartVertexUniqueID+" Does not exist!");
 		for(int i=0; i<this.graph.size(); i++){
 			this.graph.get(i).vertex.label = "UNEXPLORED";
@@ -315,68 +322,63 @@ public class Graph {
 //	// returns a path between start vertex and end vertex
 //	// if exists using dfs. [18 pts]
 	public Vector<PathSegment> pathDFS(String strStartVertexUniqueID, String strEndVertexUniqueID) throws GraphException{
-		//boolean flagil = false;
-		Voxe voxe=this.graph.get(searchB(strStartVertexUniqueID));
-		//ziad.vertex.label="visited";
-		//visitor.visit(ziad.vertex);
-		Stack <B> s=  new Stack<B>();
-		Stack <A> s1=  new Stack<A>();
-		B floor = new B(new Vertex("hahahahahahahahahahahahahahahahahahahahahahahahafgn;ajfehu","khfa",0,0));
-		A floor1 = new A(new Edge("$","a",0,"a","w"));
-		s.push(floor);
-		s1.push(floor1);
-		A mark = ziad.a;
-		while(!(s.peek().vertex.getUniqueID().equals("hahahahahahahahahahahahahahahahahahahahahahahahafgn;ajfehu"))){
-			//
-			mark = ziad.a;
-			if(!ziad.vertex.label.equals("visited")){
-				ziad.vertex.label="visited";
-				//visitor.visit(ziad.vertex);
-				s.push(ziad);
-				break;
-			} 
-			while(true){
-				if(mark.edge.label.equals("undiscovered")){
-					mark.edge.label= "back";
-					B posNewZiad;
-					//visitor.visit(mark.edge);
-					if(mark.edge.rvid.equals(ziad.vertex.getUniqueID())){
-						posNewZiad=searchB(ziad.a.edge.lvid);
+		if(!vertexExists(strStartVertexUniqueID)) throw new GraphException("Vertex "+strStartVertexUniqueID+" Does not exist!");
+		if(!vertexExists(strEndVertexUniqueID)) throw new GraphException("Vertex "+strEndVertexUniqueID+" Does not exist!");
+		for(int i=0; i<this.graph.size(); i++){
+			this.graph.get(i).vertex.label = "UNEXPLORED";
+		}
+		for(int i=0; i<this.allEdges.size(); i++){
+			this.allEdges.get(i).label = "UNEXPLORED";
+		}
+		Voxe voxe = this.graph.get(searchB(strStartVertexUniqueID));
+		Stack <Voxe> stack=  new Stack<Voxe>();
+		Stack <Edge> edgeStack = new Stack<Edge>();
+		boolean flagil = true;
+		stack.push(voxe);
+		voxe.vertex.label="VISITED";
+		while(!(stack.peek().vertex.getUniqueID().equals("strEndVertexUniqueID"))){
+			ArrayList<Edge> edges = stack.peek().edges;
+			for(int i=0; i<edges.size(); i++){
+				if(edges.get(i).label.equals("UNEXPLORED")){
+					
+					if(edges.get(i).lvid.equals(stack.peek().vertex.getUniqueID())){
+						voxe = this.graph.get(searchB(edges.get(i).rvid));
 					}
 					else{
-						posNewZiad=searchB(ziad.a.edge.rvid);
+						voxe = this.graph.get(searchB(edges.get(i).lvid));
 					}
-					if(posNewZiad.vertex.label.equals("undiscovered")){
-						ziad = posNewZiad;
-						mark.edge.label= "discovery";
-						s1.push(mark);
+					// other explored or not
+					if(voxe.vertex.label.equals("UNEXPLORED")){
+						edges.get(i).label = "DISCOVERY";
+						edgeStack.push(edges.get(i));
+						voxe.vertex.label = "VISITED";
+						stack.push(voxe);
+						flagil = false;
 						break;
 					}
-				}
-				mark=mark.next;
-				if(mark==null){
-					s.pop();
-					s1.pop();
-					ziad=s.peek();
-					break;
+					else{
+						edges.get(i).label = "BACK";
+					}
 				}
 			}
-			
-			
-			//
-		}
-		if(s.peek().vertex.getUniqueID().equals("hahahahahahahahahahahahahahahahahahahahahahahahafgn;ajfehu")){
-			return null;
+			if(flagil){
+				stack.pop();
+				edgeStack.pop();
+				if(stack.isEmpty()){
+					throw new GraphException("NO PATH EXISTS!");
+				}
+			}
+			flagil = true;
 		}
 		Vector<PathSegment> pathdfs = new Vector<PathSegment>();
-		B[] verticies = new B[s.size()];
-		A[] edges = new A[s.size()];
+		Vertex[] verticies = new Vertex[stack.size()];
+		Edge[] edges = new Edge[edgeStack.size()];
 		int i;
-		while(!(s.peek().vertex.getUniqueID().equals("hahahahahahahahahahahahahahahahahahahahahahahahafgn;ajfehu"))){
-			verticies[s.size()-1]=s.pop();
+		while(!(stack.isEmpty())){
+			verticies[stack.size()-1]=stack.pop().vertex;
 		}
-		while(!(s1.peek().edge.getUniqueID().equals("$"))){
-			edges[s1.size()-1]=s1.pop();
+		while(!(edgeStack.isEmpty())){
+			edges[edgeStack.size()-1]=edgeStack.pop();
 		}
 		if(verticies.length==(edges.length+1)){
 			System.out.println("Correct maths");
@@ -385,28 +387,20 @@ public class Graph {
 		Vertex vertex;
 		Edge edge;
 		for(i=0;i<edges.length;i++){
-			edge = edges[i].edge;
-			vertex = verticies[i].vertex;
+			edge = edges[i];
+			vertex = verticies[i];
 			pathSegment = new PathSegment(vertex, edge);
 			pathdfs.add(pathSegment);
 		}
-		return pathdfs;
-				
+		return pathdfs;		
 	}
 //	// finds the closest pair of vertices using divide and conquer
 //	// algorithm. Use X and Y attributes in each vertex. [30 pts]
 	public Vertex[] closestPair() throws GraphException {
-		if(this.graph1.head==null || this.graph1.head.next==null)
-			throw new GraphException("Must initialize graph with atleast 2 verticies first");
-		B bContainingVertex = this.graph1.head;
-		Stack<B> tempBStack = new Stack<B>();
-		while(bContainingVertex!=null){
-			tempBStack.push(bContainingVertex);
-			bContainingVertex=bContainingVertex.next;
-		}
+		if(this.graph.size()<2) throw new GraphException("Graph must contain atleast two verticies before you can find closest PAIR");
 		ArrayList<Vertex> verticies = new ArrayList<Vertex>();
-		while(!tempBStack.isEmpty()){
-			verticies.add(tempBStack.pop().vertex);
+		for(int i=0; i<this.graph.size(); i++){
+			verticies.add(this.graph.get(i).vertex);
 		}
 		Collections.sort(verticies);
 
@@ -595,21 +589,8 @@ public class Graph {
 
 	}
 	public void prinG(){
-		B ml = graph1.head;
-		while(ml != null){
-			System.out.println("\nVertex: "+ml);
-			A dw = ml.a;
-			while(dw != null){
-				System.out.println("Vertex: "+ml+"  Edge: "+dw+", ");
-				dw = dw.next;
-			}
-			ml = ml.next;
-		}
-		if(graph1.head == null){
-			System.out.println("nothing yet :)");
+		for(int i=0; i<this.graph.size(); i++){
+			System.out.println(this.graph.get(i));
 		}
 	}
-//
-//	
-//	
 }
