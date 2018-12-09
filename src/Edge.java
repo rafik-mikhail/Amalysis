@@ -1,5 +1,5 @@
 
-public class Edge {
+public class Edge implements Comparable{
 	protected String _strUniqueID, //a unique id identifying edge
 	 _strData;  //data associated with this edge.
 	 			//Data could be name of edge or
@@ -28,4 +28,8 @@ public class Edge {
 	 public int getCost( ){
 		 return _nEdgeCost;
 	 } 
+	 public int compareTo(Object otherEdgeObject){
+		Edge otherEdge = ((Edge)otherEdgeObject);
+		return (this._nEdgeCost - otherEdge.getCost());
+	}
 }

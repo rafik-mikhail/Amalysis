@@ -26,7 +26,6 @@ class Voxe {
 public class Graph {
 	
 	ArrayList<Voxe>graph = new ArrayList<Voxe>();
-	AdjacencyList graph1 = new AdjacencyList();
 	ArrayList<Edge>allEdges = new ArrayList<Edge>();
 	public boolean edgeExists(String strEdgeUniqueID){
 		for(int i=0; i<this.allEdges.size(); i++){
@@ -81,6 +80,11 @@ public class Graph {
 		Voxe joey=new Voxe(v);
 		this.graph.add(joey);
 	}
+	public void insertVertex(Vertex vertex) throws GraphException{
+		if(vertexExists(vertex.getUniqueID())) throw new GraphException("Vertex with id "+vertex.getUniqueID()+" already exists!");
+		Voxe joey=new Voxe(vertex);
+		this.graph.add(joey);
+	}
 	// inserts an edge between 2 specified vertices [2 pts]
 	public void insertEdge(String strVertex1UniqueID,String strVertex2UniqueID,String strEdgeUniqueID,String strEdgeData,int nEdgeCost) throws GraphException{
 		if(edgeExists(strEdgeUniqueID)) throw new GraphException("Edge with id "+strEdgeUniqueID+" already exists!");
@@ -103,6 +107,31 @@ public class Graph {
 		}
 		else{
 			Edge e = new Edge(strEdgeUniqueID, strEdgeData, nEdgeCost,strVertex2UniqueID,strVertex1UniqueID);
+			this.graph.get(vertex1Pos).edges.add(e);
+			this.graph.get(vertex2Pos).edges.add(e);
+			this.allEdges.add(e);
+		}
+	}
+	public void insertEdge(Edge e) throws GraphException{
+		if(edgeExists(e.getUniqueID())) throw new GraphException("Edge with id "+e.getUniqueID()+" already exists!");
+		boolean flagil1 = false;
+		boolean flagil2 = false;
+		int vertex1Pos = 0, vertex2Pos = 0;
+		for(int i=0; i<this.graph.size();i++){
+			if(this.graph.get(i).vertex.getUniqueID().equals(e.lvid)){
+				flagil1 = true;
+				vertex1Pos = i;
+			}
+			else if(this.graph.get(i).vertex.getUniqueID().equals(e.rvid)){
+				flagil2 = true;
+				vertex2Pos = i;
+			}
+		}
+		if(!flagil1 || !flagil2){
+			GraphException hisham = new GraphException("One of the vertices is missssssiiiiiiinnnnnggggg");
+			throw hisham;
+		}
+		else{
 			this.graph.get(vertex1Pos).edges.add(e);
 			this.graph.get(vertex2Pos).edges.add(e);
 			this.allEdges.add(e);
@@ -549,6 +578,144 @@ public class Graph {
 		double distanceBetweenPoints = Math.sqrt(square2 + square1);
 		return distanceBetweenPoints;
 	}
+
+	public static boolean dfsspan(Graph g) throws GraphException{ 
+		for(int i=0; i<g.graph.size(); i++){
+			g.graph.get(i).vertex.label = "UNEXPLORED";
+		}
+		for(int i=0; i<g.allEdges.size(); i++){
+			g.allEdges.get(i).label = "UNEXPLORED";
+		}
+		Voxe voxe = g.graph.get(0);
+		Stack <Voxe> stack=  new Stack<Voxe>();
+		stack.push(voxe);
+		boolean flagil = true;
+		voxe.vertex.label="VISITED";
+		while(!stack.isEmpty()){
+			ArrayList<Edge> edges = stack.peek().edges;
+			for(int i=0; i<edges.size(); i++){
+				if(edges.get(i).label.equals("UNEXPLORED")){
+					
+					if(edges.get(i).lvid.equals(stack.peek().vertex.getUniqueID())){
+						voxe = g.graph.get(g.searchB(edges.get(i).rvid));
+					}
+					else{
+						voxe = g.graph.get(g.searchB(edges.get(i).lvid));
+					}
+					// other explored or not
+					if(voxe.vertex.label.equals("UNEXPLORED")){
+						edges.get(i).label = "DISCOVERY";
+						voxe.vertex.label = "VISITED";
+						stack.push(voxe);
+						flagil = false;
+						break;
+					}
+					else{
+						edges.get(i).label = "BACK";
+						return true;
+					}
+				}
+			}
+			if(flagil){
+				stack.pop();
+			}
+			flagil = true;
+		}
+		return false;
+	}	
+	public static Vector<PathSegment> dfsspanvect(Graph g) throws GraphException{ 
+		Vector<PathSegment> vector = new Vector<PathSegment>();
+		for(int i=0; i<g.graph.size(); i++){
+			g.graph.get(i).vertex.label = "UNEXPLORED";
+		}
+		for(int i=0; i<g.allEdges.size(); i++){
+			g.allEdges.get(i).label = "UNEXPLORED";
+		}
+		Voxe voxe = g.graph.get(0);
+		Vertex vV = voxe.vertex;
+		Stack <Voxe> stack=  new Stack<Voxe>();
+		stack.push(voxe);
+		boolean flagil = true;
+		voxe.vertex.label="VISITED";
+		while(!stack.isEmpty()){
+			ArrayList<Edge> edges = stack.peek().edges;
+			for(int i=0; i<edges.size(); i++){
+				if(edges.get(i).label.equals("UNEXPLORED")){
+					
+					if(edges.get(i).lvid.equals(stack.peek().vertex.getUniqueID())){
+						voxe = g.graph.get(g.searchB(edges.get(i).rvid));
+					}
+					else{
+						voxe = g.graph.get(g.searchB(edges.get(i).lvid));
+					}
+					// other explored or not
+					if(voxe.vertex.label.equals("UNEXPLORED")){
+						edges.get(i).label = "DISCOVERY";
+						voxe.vertex.label = "VISITED";
+						stack.push(voxe);
+						vector.add(new PathSegment(vV, edges.get(i)));
+						vV = voxe.vertex;
+						flagil = false;
+						break;
+					}
+					else{
+						edges.get(i).label = "BACK";
+					}
+				}
+			}
+			if(flagil){
+				stack.pop();
+			}
+			flagil = true;
+		}
+		return vector;
+	}
+
+	// finds a minimum spanning tree using kruskal greedy algorithm
+// and returns the path to achieve that. Use Edge._nEdgeCost
+// attribute in finding the min span tree
+public Vector<PathSegment> minSpanningTree() throws GraphException{
+	ArrayList<Edge> hesham = new ArrayList<Edge>();
+	for(int i=0; i<this.allEdges.size(); i++){
+		hesham.add(this.allEdges.get(i));
+	}
+	Collections.sort(hesham);
+	Graph g = new Graph();
+	for(int i=0; i<this.graph.size(); i++){
+		g.insertVertex(this.graph.get(i).vertex);
+	}
+	for(int i=0; i<hesham.size(); i++){
+		g.insertEdge(hesham.get(i));
+		if(dfsspan(g)){
+			g.removeEdge(hesham.get(i).getUniqueID());
+		}
+	}
+	
+	return dfsspanvect(g);
+}
+// finds shortest paths using bellman ford dynamic programming
+// algorithm and returns all such paths starting from given
+// vertex. Use Edge._nEdgeCost attribute in finding the
+// shortest path
+public Vector<Vector<PathSegment>> findShortestPathBF(String strStartVertexUniqueID) throws GraphException{
+	int [] distances = new int[this.graph.size()];
+	for(int i=0; i<distances.length; i++){
+		distances[i] = (int)Double.POSITIVE_INFINITY;
+	}
+	distances[searchB(strStartVertexUniqueID)] = 0;
+	for (int i =0 ; i < distances.length; i++) 
+    { 
+        for (int j = 0; j < this.allEdges.size(); j++) 
+        { 
+            int l = searchB(this.allEdges.get(j).lvid); 
+            int r = searchB(this.allEdges.get(j).rvid); 
+            int cost = this.allEdges.get(j).getCost(); 
+            if (distances[l] != (int)Double.POSITIVE_INFINITY && distances[l] + cost < distances[r]) 
+			distances[r] = distances[l] + cost; 
+        } 
+    } 
+	return;
+}
 	public static void main(String[]args) throws GraphException{
 		// Vertex v1 = new Vertex("s","d",0,4);
 		// Vertex v2 = new Vertex("s1","d1",1,4);
@@ -559,20 +726,20 @@ public class Graph {
 		// System.out.println(DistanceBetweenPoints(v0));
 		Graph g = new Graph();
 		// g.prinG();
-		g.insertVertex("s","d",0,4);
-		// g.prinG();
+		// g.insertVertex("s","d",0,4);
+		// // g.prinG();
 		g.insertVertex("s1","d1",100,4);
-		// g.prinG();
+		// // g.prinG();
 		g.insertVertex("s2","d2",5,4);
 		g.insertVertex("s3", "d3", 7, 4);
-		g.insertVertex("s4", "d4", 8, 3);
-		// g.prinG();
-		g.insertEdge("s", "s1", "e1", "ed", 1);
-		g.insertEdge("s", "s2", "e2", "ed1", 1);
-		g.insertEdge("s", "s3", "e3", "ed2", 1);
+		// g.insertVertex("s4", "d4", 8, 3);
+		// // g.prinG();
+		// g.insertEdge("s", "s1", "e1", "ed", 1);
+		// g.insertEdge("s", "s2", "e2", "ed1", 1);
+		// g.insertEdge("s", "s3", "e3", "ed2", 1);
 		g.insertEdge("s1", "s2", "e12", "ed3", 1);
 		g.insertEdge("s1", "s3", "e13", "ed4", 1);
-		g.insertEdge("s2", "s3", "e23", "ed5", 1);
+		g.insertEdge("s2", "s3", "e23", "ed5", 4);
 		
 		// System.out.println("hi joey");
 		// g.prinG();
@@ -599,12 +766,12 @@ public class Graph {
 		// for(int i = 0; i<incEdges.size();i++){
 			// System.out.println(incEdges.get(i).getUniqueID());
 		// }
-		// Vector<PathSegment> incEdges = g.pathDFS("s","s3");
-		// System.out.println("path:");
-		// for(int i = 0; i<incEdges.size();i++){
-		// 	System.out.println(incEdges.get(i).getVertex().getUniqueID());
-		// 	System.out.println(incEdges.get(i).getEdge().getUniqueID());
-		// }
+		Vector<PathSegment> incEdges = g.minSpanningTree();
+		System.out.println("MIN_SPANNING_TREE:");
+		for(int i = 0; i<incEdges.size();i++){
+			System.out.println(incEdges.get(i).getVertex().getUniqueID());
+			System.out.println(incEdges.get(i).getEdge().getUniqueID());
+		}
 		// Vector<Vertex> incEdges = g.vertices();
 		// System.out.println("vertices:");
 		// for(int i = 0; i<incEdges.size();i++){
@@ -620,8 +787,8 @@ public class Graph {
 		// for(int i = 0; i<incEdges.size();i++){
 		// 	System.out.println(incEdges.get(i).getUniqueID());
 		// }
-		Vertex[] closestPai = g.closestPair();
-		System.out.println("p1: "+closestPai[0].getUniqueID()+" p2: "+closestPai[1].getUniqueID()+'.');
+		// Vertex[] closestPai = g.closestPair();
+		// System.out.println("p1: "+closestPai[0].getUniqueID()+" p2: "+closestPai[1].getUniqueID()+'.');
 		// boolean f5 = false;
 		// System.out.println(60);
 
