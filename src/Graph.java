@@ -623,54 +623,7 @@ public class Graph {
 		}
 		return false;
 	}	
-	public static Vector<PathSegment> dfsspanvect(Graph g) throws GraphException{ 
-		Vector<PathSegment> vector = new Vector<PathSegment>();
-		for(int i=0; i<g.graph.size(); i++){
-			g.graph.get(i).vertex.label = "UNEXPLORED";
-		}
-		for(int i=0; i<g.allEdges.size(); i++){
-			g.allEdges.get(i).label = "UNEXPLORED";
-		}
-		Voxe voxe = g.graph.get(0);
-		Vertex vV = voxe.vertex;
-		Stack <Voxe> stack=  new Stack<Voxe>();
-		stack.push(voxe);
-		boolean flagil = true;
-		voxe.vertex.label="VISITED";
-		while(!stack.isEmpty()){
-			ArrayList<Edge> edges = stack.peek().edges;
-			for(int i=0; i<edges.size(); i++){
-				if(edges.get(i).label.equals("UNEXPLORED")){
-					
-					if(edges.get(i).lvid.equals(stack.peek().vertex.getUniqueID())){
-						voxe = g.graph.get(g.searchB(edges.get(i).rvid));
-					}
-					else{
-						voxe = g.graph.get(g.searchB(edges.get(i).lvid));
-					}
-					// other explored or not
-					if(voxe.vertex.label.equals("UNEXPLORED")){
-						edges.get(i).label = "DISCOVERY";
-						voxe.vertex.label = "VISITED";
-						stack.push(voxe);
-						vector.add(new PathSegment(vV, edges.get(i)));
-						vV = voxe.vertex;
-						flagil = false;
-						break;
-					}
-					else{
-						edges.get(i).label = "BACK";
-					}
-				}
-			}
-			if(flagil){
-				stack.pop();
-			}
-			flagil = true;
-		}
-		return vector;
-	}
-
+	
 	// finds a minimum spanning tree using kruskal greedy algorithm
 // and returns the path to achieve that. Use Edge._nEdgeCost
 // attribute in finding the min span tree
@@ -690,8 +643,11 @@ public Vector<PathSegment> minSpanningTree() throws GraphException{
 			g.removeEdge(hesham.get(i).getUniqueID());
 		}
 	}
-	
-	return dfsspanvect(g);
+	Vector<PathSegment> answer = new Vector<PathSegment>();
+	for(int i=0; i<g.allEdges.size(); i++){
+		answer.add(new PathSegment(null, g.allEdges.get(i)));
+	}
+	return answer;
 }
 // finds shortest paths using bellman ford dynamic programming
 // algorithm and returns all such paths starting from given
@@ -714,7 +670,7 @@ public Vector<Vector<PathSegment>> findShortestPathBF(String strStartVertexUniqu
 			distances[r] = distances[l] + cost; 
         } 
     } 
-	return;
+	return null;
 }
 	public static void main(String[]args) throws GraphException{
 		// Vertex v1 = new Vertex("s","d",0,4);
@@ -769,7 +725,7 @@ public Vector<Vector<PathSegment>> findShortestPathBF(String strStartVertexUniqu
 		Vector<PathSegment> incEdges = g.minSpanningTree();
 		System.out.println("MIN_SPANNING_TREE:");
 		for(int i = 0; i<incEdges.size();i++){
-			System.out.println(incEdges.get(i).getVertex().getUniqueID());
+			// System.out.println(incEdges.get(i).getVertex().getUniqueID());
 			System.out.println(incEdges.get(i).getEdge().getUniqueID());
 		}
 		// Vector<Vertex> incEdges = g.vertices();
