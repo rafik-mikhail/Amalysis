@@ -245,7 +245,7 @@ public class Graph {
 						visitor.visit(edges.get(i));
 						edges.get(i).label = "DISCOVERY";
 						voxe.vertex.label = "VISITED";
-						Visitor.visit(voxe.vertex);
+						visitor.visit(voxe.vertex);
 						stack.push(voxe);
 						break;
 					}
@@ -280,7 +280,7 @@ public class Graph {
 		for(int i=0; i<this.allEdges.size(); i++){
 			this.allEdges.get(i).label = "UNEXPLORED";
 		}
-		Queue<Voxe> queue = new Queue<Voxe>();
+		Queue<Voxe> queue = new LinkedList<Voxe>();
 		Voxe voxe = this.graph.get(searchB(strStartVertexUniqueID));
 		queue.add(voxe);
 		voxe.vertex.label = "VISITED";
@@ -298,11 +298,11 @@ public class Graph {
 						voxe2 = this.graph.get(searchB(edges.get(i).lvid));
 					}
 					// other explored or not
-					if(vox2.vertex.label.equals("UNEXPLORED")){
+					if(voxe2.vertex.label.equals("UNEXPLORED")){
 						visitor.visit(edges.get(i));
 						edges.get(i).label = "DISCOVERY";
 						voxe2.vertex.label = "VISITED";
-						Visitor.visit(voxe2.vertex);
+						visitor.visit(voxe2.vertex);
 						queue.add(voxe2);
 					}
 					else{
@@ -316,7 +316,7 @@ public class Graph {
 //	// if exists using dfs. [18 pts]
 	public Vector<PathSegment> pathDFS(String strStartVertexUniqueID, String strEndVertexUniqueID) throws GraphException{
 		//boolean flagil = false;
-		B ziad=searchB(strStartVertexUniqueID);
+		Voxe voxe=this.graph.get(searchB(strStartVertexUniqueID));
 		//ziad.vertex.label="visited";
 		//visitor.visit(ziad.vertex);
 		Stack <B> s=  new Stack<B>();
