@@ -23,6 +23,10 @@ class Voxe {
 		return toBeReturned;
 	}
 }
+class Finalq{
+	int distance = Integer.MAX_VALUE;
+	Vector<PathSegment> path = null;
+}
 public class Graph {
 	
 	ArrayList<Voxe>graph = new ArrayList<Voxe>();
@@ -671,6 +675,50 @@ public Vector<Vector<PathSegment>> findShortestPathBF(String strStartVertexUniqu
         } 
     } 
 	return null;
+}
+// finds all shortest paths using Floyd–Warshall dynamic
+// programming algorithm and returns all such paths. Use
+// Edge._nEdgeCost attribute in finding the shortest path
+//
+public Vector<Vector<PathSegment>> findAllShortestPathsFW() throws GraphException {
+	Finalq[][] distances = new Finalq[this.graph.size()][this.graph.size()];
+	for(int i=0; i<this.graph.size(); i++){
+		for(int j=0; j<this.graph.size(); j++){
+			distances[i][j] = new Finalq();
+		}
+	}
+	for(int i=0; i<this.graph.size(); i++){
+		distances[i][i].distance = 0;
+		distances[i][i].path = new Vector<PathSegment>();
+	}
+	for(int i=0; i<this.allEdges.size(); i++){
+		distances[searchB(this.allEdges.get(i).lvid)][searchB(this.allEdges.get(i).rvid)].distance = this.allEdges.get(i).getCost();
+		distances[searchB(this.allEdges.get(i).rvid)][searchB(this.allEdges.get(i).lvid)].distance = this.allEdges.get(i).getCost();
+		distances[searchB(this.allEdges.get(i).lvid)][searchB(this.allEdges.get(i).rvid)].path = new Vector<PathSegment>();
+		distances[searchB(this.allEdges.get(i).lvid)][searchB(this.allEdges.get(i).rvid)].path.add(new PathSegment(this.graph.get(searchB(this.allEdges.get(i).lvid)).vertex ,this.allEdges.get(i)));
+		distances[searchB(this.allEdges.get(i).rvid)][searchB(this.allEdges.get(i).lvid)].path = new Vector<PathSegment>();
+		distances[searchB(this.allEdges.get(i).rvid)][searchB(this.allEdges.get(i).lvid)].path.add(new PathSegment(this.graph.get(searchB(this.allEdges.get(i).rvid)).vertex ,this.allEdges.get(i)));
+	}
+	for(int k=0; k<this.graph.size(); k++){
+		for(int i=0; i<this.graph.size(); i++){
+			for(int j=0; j<this.graph.size(); j++){
+				if(distances[i][j].distance > distances[i][k].distance + distances[k][j].distance){
+					distances[i][j].distance = distances[i][k].distance + distances[k][j].distance;
+					distances[i][j].path = (Vector) distances[i][k].path.clone();
+					distances[i][j].path.addAll(distances[k][j].path);
+				}
+			}
+		}
+	}
+	Vector<Vector<PathSegment>> answerResult = new Vector<Vector<PathSegment>>();
+	for(int i=0; i<this.graph.size(); i++){
+		for(int j=i+1; j<this.graph.size(); j++){
+			if(i!=j){
+				answerResult.add(distances[i][j].path);
+			}
+		}
+	}
+	return answerResult;
 }
 	public static void main(String[]args) throws GraphException{
 		// Vertex v1 = new Vertex("s","d",0,4);
