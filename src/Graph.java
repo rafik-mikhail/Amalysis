@@ -766,7 +766,6 @@ public Vector<Vector<PathSegment>> findAllShortestPathsFW() throws GraphExceptio
 		// g.insertEdge("s1", "s2", "e12", "ed3", 1);
 		// g.insertEdge("s1", "s3", "e13", "ed4", 1);
 		// g.insertEdge("s2", "s3", "e23", "ed5", 4);
-		
 		// System.out.println("hi joey");
 		// g.prinG();
 		// System.out.println(g.vertexExists("s2"));
@@ -865,7 +864,6 @@ public Vector<Vector<PathSegment>> findAllShortestPathsFW() throws GraphExceptio
 		// 	System.out.println("");
 		// }
 		// System.out.println(vect);
-
 	}
 	public void prinG(){
 		for(int i=0; i<this.graph.size(); i++){
