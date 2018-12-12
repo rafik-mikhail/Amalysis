@@ -15,4 +15,7 @@ public class PathSegment {
 	 	this._vertex = v;
 	 	this._edge = e;
 	 }
+	 public String toString(){
+		 return "From "+this._vertex.getUniqueID()+" following "+this._edge.getUniqueID();
+	 }
 }
