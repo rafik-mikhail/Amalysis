@@ -24,7 +24,6 @@ class Voxe {
 	}
 }
 class Finalq{
-	// int distance = Integer.MAX_VALUE;
 	double distance = Double.POSITIVE_INFINITY;
 	Vector<PathSegment> path = new Vector<PathSegment>();
 }
@@ -75,7 +74,7 @@ public class Graph {
 	// read the following if you are wondering what this is ☺
 	// https://en.wikipedia.org/wiki/Software_versioning
 	public String getLibraryVersion( ){
-		return "1";
+		return "1.0.03";
 	 }
 
 	 // the following method adds a vertex to the graph [2 pts]
@@ -107,7 +106,7 @@ public class Graph {
 			}
 		}
 		if(!flagil1 || !flagil2){
-			GraphException hisham = new GraphException("One of the vertices is missssssiiiiiiinnnnnggggg");
+			GraphException hisham = new GraphException("One of the vertices is missing");
 			throw hisham;
 		}
 		else{
@@ -133,7 +132,7 @@ public class Graph {
 			}
 		}
 		if(!flagil1 || !flagil2){
-			GraphException hisham = new GraphException("One of the vertices is missssssiiiiiiinnnnnggggg");
+			GraphException hisham = new GraphException("One of the vertices is missing");
 			throw hisham;
 		}
 		else{
@@ -421,9 +420,6 @@ public class Graph {
 		}
 		while(!(edgeStack.isEmpty())){
 			edges[edgeStack.size()-1]=edgeStack.pop();
-		}
-		if(verticies.length==(edges.length+1)){
-			System.out.println("Correct maths");
 		}
 		PathSegment pathSegment;
 		Vertex vertex;
@@ -743,127 +739,89 @@ public Vector<Vector<PathSegment>> findAllShortestPathsFW() throws GraphExceptio
 	return answerResult;
 }
 	public static void main(String[]args) throws GraphException{
-		// Vertex v1 = new Vertex("s","d",0,4);
-		// Vertex v2 = new Vertex("s1","d1",1,4);
-		//Vertex v3 = new Vertex("s2","d2",5,4);
-		// ArrayList<Vertex> v0 = new ArrayList<Vertex>();
-		// v0.add(v1);
-		// v0.add(v2);
-		// System.out.println(DistanceBetweenPoints(v0));
-		// Graph g = new Graph();
-		// g.prinG();
-		// g.insertVertex("s","d",0,4);
-		// // g.prinG();
-		// g.insertVertex("s1","d1",100,4);
-		// // g.prinG();
-		// g.insertVertex("s2","d2",5,4);
-		// g.insertVertex("s3", "d3", 7, 4);
-		// g.insertVertex("s4", "d4", 8, 3);
-		// // g.prinG();
-		// g.insertEdge("s", "s1", "e1", "ed", 1);
-		// g.insertEdge("s", "s2", "e2", "ed1", 1);
-		// g.insertEdge("s", "s3", "e3", "ed2", 1);
-		// g.insertEdge("s1", "s2", "e12", "ed3", 1);
-		// g.insertEdge("s1", "s3", "e13", "ed4", 1);
-		// g.insertEdge("s2", "s3", "e23", "ed5", 4);
-		// System.out.println("hi joey");
-		// g.prinG();
-		// System.out.println(g.vertexExists("s2"));
-		//g.removeVertex("s2");
-		// System.out.println(g.vertexExists("s2"));
-		// g.prinG();
-		// System.out.println(g.edgeExists("e13"));
-		//g.removeEdge("e13");
-		// System.out.println(g.endVertices("e1")[0].getUniqueID());
-		// System.out.println(g.endVertices("e1")[1].getUniqueID());
-		// System.out.println(g.opposite("s3","e3").getUniqueID());
-		// g.prinG();
-		// System.out.println("\n");
-		// Visitor visitor = new Visitor();
-		// g.dfs("s",visitor);
-		// System.out.println(g.edgeExists("e13"));
-		// System.out.println(g.getLibraryName());
-		// System.out.println(g.getLibraryVersion());
-		// g.prinG();
-		//System.out.println("\n\n\n\n\n\n\n");
-		// Vector<Edge> incEdges = g.incidentEdges("s");
-		// System.out.println("incident for s");
-		// for(int i = 0; i<incEdges.size();i++){
-			// System.out.println(incEdges.get(i).getUniqueID());
-		// }
-		// Vector<PathSegment> incEdges = g.minSpanningTree();
-		// System.out.println("MIN_SPANNING_TREE:");
-		// for(int i = 0; i<incEdges.size();i++){
-		// 	// System.out.println(incEdges.get(i).getVertex().getUniqueID());
-		// 	System.out.println(incEdges.get(i).getEdge().getUniqueID());
-		// }
-		// // Vector<Vertex> incEdges = g.vertices();
-		// System.out.println("vertices:");
-		// for(int i = 0; i<incEdges.size();i++){
-		// 	System.out.println(incEdges.get(i).getUniqueID());
-		// }
-		// System.out.println("incident for s1");
-		// incEdges = g.incidentEdges("s1");
-		// for(int i = 0; i<incEdges.size();i++){
-		// 	System.out.println(incEdges.get(i).getUniqueID());
-		// }
-		// System.out.println("incident for s2");
-		// incEdges = g.incidentEdges("s2");
-		// for(int i = 0; i<incEdges.size();i++){
-		// 	System.out.println(incEdges.get(i).getUniqueID());
-		// }
-		// Vertex[] closestPai = g.closestPair();
-		// System.out.println("p1: "+closestPai[0].getUniqueID()+" p2: "+closestPai[1].getUniqueID()+'.');
-		// boolean f5 = false;
-		// System.out.println(60);
-		// g.insertVertex("A", "`", 0, 0);
-		// g.insertVertex("B", "`", 0, 0);
-		// g.insertVertex("C", "`", 0, 0);
-		// g.insertVertex("D", "`", 0, 0);
-		// g.insertVertex("E", "`", 0, 0);
-		// g.insertVertex("F", "`", 0, 0);
-		// g.insertVertex("G", "`", 0, 0);
-		// g.insertVertex("H", "`", 0, 0);
-		// g.insertEdge("A", "C", "1", "`", 5);
-		// g.insertEdge("A", "D", "2", "`", 2);
-		// g.insertEdge("D", "B", "3", "`", 4);
-		// g.insertEdge("B", "F", "4", "`", 8);
-		// g.insertEdge("F", "H", "5", "`", 6);
-		// g.insertEdge("D", "H", "6", "`", 7);
-		// g.insertEdge("E", "H", "7", "`", 2);
-		// g.insertEdge("E", "G", "8", "`", 5);
-		// g.insertEdge("G", "C", "9", "`", 4);
-		// g.insertEdge("E", "D", "0", "`", 3);
-		// Vector<Vector<PathSegment>> vecto = g.findAllShortestPathsFW();
-		// System.out.println("FLOYD-WARSHALL");
-		// for(int i=0; i<vecto.size(); i++){
-		// 	System.out.println("Path "+(i+1)+": "+vecto.get(i));
-		// }
-		// for(int i=0; i<vecto.size(); i++){
-		// 	Vector<PathSegment> vect = vecto.get(i);
-		// 	System.out.print("Path "+(i+1)+" ");
-		// 	for(int j=0; j<vect.size(); j++){
-		// 		System.out.print("Vertex: "+vect.get(j).getVertex().getUniqueID());
-		// 		System.out.print(" Edge: "+vect.get(j).getEdge().getUniqueID()+" ");
-		// 	}
-		// 	System.out.println("");
-		// }
-		// System.out.println(vecto);
-		// Vector<Vector<PathSegment>> vect = g.findShortestPathBF("A");
-		// System.out.println("BELLMAN FORD");
-		// for(int i=0; i<vect.size(); i++){
-		// 	System.out.println("Path "+(i+1)+": "+vect.get(i));
-		// }
-		// for(int i=0; i<vect.size(); i++){
-		// 	Vector<PathSegment> vec = vect.get(i);
-		// 	System.out.print("Path "+(i+1)+" ");
-		// 	for(int j=0; j<vec.size(); j++){
-		// 		System.out.print("Vertex: "+vec.get(j).getVertex().getUniqueID());
-		// 		System.out.print(" Edge: "+vec.get(j).getEdge().getUniqueID()+" ");
-		// 	}
-		// 	System.out.println("");
-		// }
-		// System.out.println(vect);
+		Graph g = new Graph();
+		System.out.println("LIBRARY NAME");
+		System.out.println(g.getLibraryName());
+		System.out.println("LIBRARY VERSION");
+		System.out.println(g.getLibraryVersion());
+		System.out.println("INSERTIONS");
+		g.insertVertex("A", "`", 0, 0);
+		g.insertVertex("B", "`", 0, 3);
+		g.insertVertex("C", "`", 0, 5);
+		g.insertVertex("D", "`", 0, 7);
+		g.insertVertex("E", "`", 0, 9);
+		g.insertVertex("F", "`", 0, 11);
+		g.insertVertex("G", "`", 6, 1);
+		g.insertVertex("H", "`", 6, 1);
+		g.insertEdge("A", "C", "1", "`", 5);
+		g.insertEdge("A", "D", "2", "`", 2);
+		g.insertEdge("D", "B", "3", "`", 4);
+		g.insertEdge("B", "F", "4", "`", 8);
+		g.insertEdge("F", "H", "5", "`", 6);
+		g.insertEdge("D", "H", "6", "`", 7);
+		g.insertEdge("E", "H", "7", "`", 2);
+		g.insertEdge("E", "G", "8", "`", 5);
+		g.insertEdge("G", "C", "9", "`", 4);
+		g.insertEdge("E", "D", "0", "`", 3);
+		g.prinG();
+		System.out.println("REMOVE A");
+		g.removeVertex("A");
+		g.prinG();
+		System.out.println("REMOVE EDGE 7");
+		g.removeEdge("7");
+		g.prinG();
+		System.out.println("RE-INSERT BOTH AND A's EDGES");
+		g.insertEdge("E", "H", "7", "`", 2);
+		g.insertVertex("A", "`", 0, 0);
+		g.insertEdge("A", "C", "1", "`", 5);
+		g.insertEdge("A", "D", "2", "`", 2);
+		g.prinG();
+		System.out.println("INCIDENT EGDES FOR C");
+		Vector<Edge> incEdges = g.incidentEdges("C");
+		for(int i = 0; i<incEdges.size();i++){
+			System.out.println(incEdges.get(i).getUniqueID());
+		}
+		System.out.println("VERTICES:");
+		Vector<Vertex> vs = g.vertices();
+		for(int i = 0; i<vs.size();i++){
+			System.out.println(vs.get(i).getUniqueID());
+		}
+		System.out.println("EDGES:");
+		Vector<Edge> es = g.edges();
+		for(int i = 0; i<es.size();i++){
+			System.out.println(es.get(i).getUniqueID());
+		}
+		System.out.println("END VERTICES EDGE 2");
+		System.out.println(g.endVertices("2")[0].getUniqueID());
+		System.out.println(g.endVertices("2")[1].getUniqueID());
+		System.out.println("OPPOSITE OF B ON EDGE 4");
+		System.out.println(g.opposite("B","4").getUniqueID());
+		Visitor visitor = new Visitor();
+		System.out.println("DFS");
+		g.dfs("A",visitor);
+		System.out.println("BFS");
+		g.bfs("A", visitor);
+		System.out.println("PATH DFS FROM A TO F");
+		Vector<PathSegment> patte = g.pathDFS("A", "F");
+		System.out.println(patte);
+		System.out.println("CLOSEST PAIR");
+		Vertex[] closestPai = g.closestPair();
+		System.out.println("p1: "+closestPai[0].getUniqueID()+" p2: "+closestPai[1].getUniqueID()+'.');
+		System.out.println("MIN_SPANNING_TREE:");
+		Vector<PathSegment> minty = g.minSpanningTree();
+		for(int i = 0; i<minty.size();i++){
+			System.out.println(minty.get(i).getEdge().getUniqueID());
+		}
+		System.out.println("BELLMAN FORD");
+		Vector<Vector<PathSegment>> vect = g.findShortestPathBF("A");
+		for(int i=0; i<vect.size(); i++){
+			System.out.println("Path "+(i+1)+": "+vect.get(i));
+		}
+		System.out.println("FLOYD-WARSHALL");
+		Vector<Vector<PathSegment>> vecto = g.findAllShortestPathsFW();
+		for(int i=0; i<vecto.size(); i++){
+			System.out.println("Path "+(i+1)+": "+vecto.get(i));
+		}
 	}
 	public void prinG(){
 		for(int i=0; i<this.graph.size(); i++){
