@@ -659,11 +659,12 @@ public Vector<PathSegment> minSpanningTree() throws GraphException{
 // vertex. Use Edge._nEdgeCost attribute in finding the
 // shortest path
 public Vector<Vector<PathSegment>> findShortestPathBF(String strStartVertexUniqueID) throws GraphException{
-	int [] distances = new int[this.graph.size()];
+	//double [] distances = new double[this.graph.size()];
+	Finalq[] distances = new Finalq[this.graph.size()];
 	for(int i=0; i<distances.length; i++){
-		distances[i] = (int)Double.POSITIVE_INFINITY;
+		distances[i] = new Finalq();
 	}
-	distances[searchB(strStartVertexUniqueID)] = 0;
+	distances[searchB(strStartVertexUniqueID)].distance=0;
 	for (int i =0 ; i < distances.length; i++) 
     { 
         for (int j = 0; j < this.allEdges.size(); j++) 
@@ -671,11 +672,18 @@ public Vector<Vector<PathSegment>> findShortestPathBF(String strStartVertexUniqu
             int l = searchB(this.allEdges.get(j).lvid); 
             int r = searchB(this.allEdges.get(j).rvid); 
             int cost = this.allEdges.get(j).getCost(); 
-            if (distances[l] != (int)Double.POSITIVE_INFINITY && distances[l] + cost < distances[r]) 
-			distances[r] = distances[l] + cost; 
+            if (distances[l].distance != Double.POSITIVE_INFINITY && distances[l].distance + cost < distances[r].distance) 
+			distances[r].distance = distances[l].distance + cost; 
+            distances[r].path.add(new PathSegment(this.graph.get(l).vertex ,this.allEdges.get(j)));
         } 
     } 
-	return null;
+	Vector<Vector<PathSegment>> answerResult = new Vector<Vector<PathSegment>>();
+	for(int i=0; i<this.graph.size(); i++){
+	
+			answerResult.add(distances[i].path);
+		}
+	
+	return answerResult;
 }
 // finds all shortest paths using Floyd–Warshall dynamic
 // programming algorithm and returns all such paths. Use
@@ -812,12 +820,16 @@ public Vector<Vector<PathSegment>> findAllShortestPathsFW() throws GraphExceptio
 		g.insertEdge("G", "C", "9", "`", 4);
 		g.insertEdge("E", "D", "0", "`", 3);
 		Vector<Vector<PathSegment>> vecto = g.findAllShortestPathsFW();
-		for(int i=0; i<vecto.size(); i++){
+		Vector<Vector<PathSegment>> vector = g.findShortestPathBF("A");
+		for(int i=0; i<vector.size(); i++){
 			Vector<PathSegment> vect = vecto.get(i);
+			Vector<PathSegment> vectorr = vector.get(i);
 			System.out.print(i+1+" ");
-			for(int j=0; j<vect.size(); j++){
+			for(int j=0; j<vectorr.size(); j++){
 				System.out.print("Vertex: "+vect.get(j).getVertex().getUniqueID());
+				System.out.print("Vertex: "+vectorr.get(j).getVertex().getUniqueID());
 				System.out.print(" Edge: "+vect.get(j).getEdge().getUniqueID()+" ");
+				System.out.print(" Edge: "+vectorr.get(j).getEdge().getUniqueID()+" ");
 			}
 			System.out.println("");
 		}
